@@ -2,7 +2,6 @@ import { Button, CardMedia } from "@mui/material";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import * as React from "react";
-import memesData from "../data/memesData";
 import Header from "./Header";
 import Input from "./Input";
 
@@ -24,14 +23,14 @@ export default function FixedContainer() {
     console.log(meme);
   }
 
-  const [allMemeImages, setAllMemeImages] = React.useState(memesData);
+  const [allMemeImages, setAllMemeImages] = React.useState({});
 
   function handleClick() {
     let randomNumber = Math.floor(Math.random() * 100) + 1;
     setMeme((prevState) => {
       return {
         ...prevState,
-        randomImage: allMemeImages.data.memes[randomNumber].url,
+        randomImage: allMemeImages[randomNumber].url,
       };
     });
   }
@@ -43,6 +42,12 @@ export default function FixedContainer() {
     color: "white",
     padding: 0,
   };
+
+  React.useEffect(() => {
+    fetch("https://api.imgflip.com/get_memes")
+      .then((res) => res.json())
+      .then((data) => setAllMemeImages(data.data.memes));
+  }, []);
 
   return (
     <React.Fragment>
